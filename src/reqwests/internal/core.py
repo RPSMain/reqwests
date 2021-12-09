@@ -36,7 +36,7 @@ from typing import (
 )
 from types import TracebackType
 from urllib.parse import quote
-from ...types.snowflake import Snowflake
+from ..types.snowflake import Snowflake
 
 T = TypeVar('T')
 BE = TypeVar('BE', bound=BaseException)
@@ -50,7 +50,6 @@ async def json_or_text(response: aiohttp.ClientResponse) -> Union[Dict[str, Any]
         if response.headers['content-type'] == 'application/json':
             return json.loads(text)
     except KeyError:
-        # Thanks Cloudflare
         pass
 
     return text
@@ -67,15 +66,13 @@ class Route:
             url = url.format_map({k: quote(v) if isinstance(v, str) else v for k, v in parameters.items()})
         self.url: str = url
 
-        # major parameters:
+        # Major parameters:
         self.channel_id: Optional[Snowflake] = parameters.get('channel_id')
         self.guild_id: Optional[Snowflake] = parameters.get('guild_id')
-        self.webhook_id: Optional[Snowflake] = parameters.get('webhook_id')
-        self.webhook_token: Optional[str] = parameters.get('webhook_token')
 
     @property
     def bucket(self) -> str:
-        # the bucket is just method + path w/ major parameters
+        # The bucket is just method + path w/ major parameters
         return f'{self.channel_id}:{self.guild_id}:{self.path}'
 
 
