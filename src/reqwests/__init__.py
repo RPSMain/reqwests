@@ -18,7 +18,9 @@ __path__ = __import__("pkgutil").extend_path(__path__, __name__)
 import logging
 from typing import NamedTuple, Literal
 
-from .internal.v1.core import *
+from .internal.core import *
+from .enums import *
+from .errors import *
 
 class VersionInfo(NamedTuple):
     major: int
